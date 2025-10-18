@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* project helpers */
+@layer components {
+  .button-primary { @apply rounded-2xl px-6 py-3 font-medium text-white bg-gradient-to-r from-blue-500 to-blue-400 shadow-lg hover:opacity-95 transition; }
+  .card { @apply bg-zinc-900/70 backdrop-blur rounded-2xl shadow-xl border border-white/5; }
+  .input { @apply w-full px-4 py-3 rounded-2xl bg-zinc-800/80 text-white placeholder-white/40 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400; }
+}
+@layer utilities {
+  /* inset glow like the reference */
+  .inset-glow-sky {
+    box-shadow: inset 0 0 13px #42b9ff80;
+  }
+}
+@layer utilities {
+  .inset-glow-sky { box-shadow: inset 0 0 13px #42b9ff80; }
+}
+/* Make the <img class="background"> behave like a full-screen background */
+.background {
+  position: fixed;         /* stays put while content scrolls */
+  inset: 0;                /* top/right/bottom/left: 0 */
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;       /* cover the viewport without distortion */
+  object-position: center; /* tweak to 'center top' if needed */
+  opacity: 0.18;           /* subtle; adjust to taste */
+  pointer-events: none;    /* never block clicks/scroll */
+  user-select: none;
+  z-index: 0;              /* sits underneath normal content */
+  transform: translateZ(0);/* helps some GPUs render smoothly */
+}
+@media (max-width: 640px) {
+  .background { object-position: center top; opacity: 0.22; }
+}
