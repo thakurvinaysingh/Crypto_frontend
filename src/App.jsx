@@ -1,5 +1,5 @@
 import AppRoutes from './routes'
-import EVMWalletProvider from './components/ ConnectWallet/EVMWalletProvider'
+import EVMWalletProvider from './components/ConnectWallet/EVMWalletProvider'
 
 export default function App() {
   return (
