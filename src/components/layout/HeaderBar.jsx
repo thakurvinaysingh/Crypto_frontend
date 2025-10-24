@@ -27,7 +27,7 @@ export default function HeaderBar() {
                 className="h-16 w-20 select-none pointer-events-none"
                 draggable="false"
               />
-              <span className="text-2xl font-mono tracking-wide">Forton</span>
+              <span className="text-2xl font-mono tracking-wide">Gain USDT</span>
             </div>
 
             {/* right: search + user */}

@@ -1,12 +1,14 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import QRCode from "qrcode";
 import { useEVMWallet } from "./EVMWalletProvider";
 import WalletList from "./WalletList";
 import { featuredWallets, allWallets } from "./wallets";
 
 export default function WalletModal({ isOpen, onClose, autoScanOnOpen = true }) {
-  const { connectInjected, connectWalletConnect, connected, address, balance, CHAIN, wcUri } = useEVMWallet();
+  const { connectInjected, connectWalletConnect, connected, address, balance, CHAIN, wcUri,disconnect } = useEVMWallet();
+  const navigate = useNavigate();
   const [viewAll, setViewAll] = useState(false);
   const [qr, setQr] = useState(null);
   const [qrError, setQrError] = useState(null);
@@ -70,7 +72,12 @@ export default function WalletModal({ isOpen, onClose, autoScanOnOpen = true }) 
                 {viewAll ? "Wallets" : connected ? "Wallet connected" : "Connect your wallet"}
               </h2>
               <button
-                onClick={onClose}
+                    onClick={async () => {
+                  try { await disconnect(); } finally {
+                    onClose?.();
+                    navigate("/");
+                  }
+                }}
                 className="h-8 w-8 rounded-full bg-white/10 hover:bg-white/15 grid place-items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
                 aria-label="Close"
               >

@@ -78,7 +78,7 @@ async function http(method, path, body) {
 
 export async function checkUserExists(address) {
   try {
-    const res = await fetch(`${API}/api/Auth/users`, {
+    const res = await fetch(`${API}/api/Auth/user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
