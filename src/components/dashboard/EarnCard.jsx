@@ -4,8 +4,9 @@ export default function EarnCard(){
       <div>
         <div className="text-white/70 mb-2">Earn</div>
         <div className="text-6xl font-semibold leading-none">50%</div>
-        <div className="mt-2 text-sky-300">
-          from your <span className="underline decoration-sky-500/60 underline-offset-4">direct partners</span> activated levels
+     
+           <div className="mt-2 text-gold-200">
+         from your <span className="underline decoration-gold-100/60 underline-offset-4">direct partners</span> activated levels
         </div>
       </div>
       <button className="hidden sm:inline-grid place-items-center rounded-full h-20 w-20 bg-gradient-to-b from-sky-400 to-sky-500 shadow-[0_18px_35px_rgba(0,0,0,.6)] ring-1 ring-white/20">

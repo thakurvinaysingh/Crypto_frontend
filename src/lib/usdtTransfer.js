@@ -50,19 +50,6 @@ export async function sendUsdt({ walletClient, account, to, amount }) {
   if (num >= 1 && value < 10n ** BigInt(decimals)) {
     console.warn("Sanity check: computed < 1 token. Check VITE_USDT_DECIMALS.");
   }
-
-//   // 4) Simulate & write
-//   const { request } = await pc.simulateContract({
-//     account: getAddress(account),
-//     address: getAddress(USDT),
-//     abi: ERC20_ABI,
-//     functionName: "transfer",
-//     args: [getAddress(to), value],
-//   });
-
-//   const hash = await walletClient.writeContract(request);
-//   return { hash };
-// 4) Simulate
 const { request } = await pc.simulateContract({
   account: getAddress(account),
   address: getAddress(USDT),

@@ -1,37 +1,24 @@
+// tailwind.config.js
 /** @type {import('tailwindcss').Config} */
-export default {
-  content: ['./index.html', './src/**/*.{js,jsx}'],
+module.exports = {
+  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'ui-sans-serif', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial'],
-      },
       colors: {
-        bg: {
-          DEFAULT: '#0b1016',   // page background
-          card: '#121826',      // glass/card background
+        gold: {
+          50:  "#FFFAE6",
+          100: "#FFF3C4",
+          200: "#FFE89A",
+          300: "#FFE070",
+          400: "#FFD700",  // primary gold
+          500: "#E6BE8A",  // warm muted gold
+          600: "#D4AF37",  // classic gold
+          700: "#B8860B",  // dark goldenrod
+          800: "#8B6B05",
+          900: "#5A4300",
         },
-        primary: {
-          DEFAULT: '#2F80ED',   // blue
-          soft: '#58A6FF',
-          dark: '#2563EB',
-        },
-        neutral: {
-          800: '#1C2333',
-          900: '#0E1524',
-        }
       },
-      boxShadow: {
-        glass: '0 20px 70px rgba(0,0,0,.45)',
-        innerGlow: 'inset 0 0 0 1px rgba(88,166,255,.2), 0 0 30px rgba(88,166,255,.15)',
-      },
-      borderRadius: {
-        xl2: '1.25rem',
-      },
-      spacing: {
-        'safe': 'max(env(safe-area-inset-bottom), 20px)',
-      }
     },
   },
   plugins: [],
-}
+};

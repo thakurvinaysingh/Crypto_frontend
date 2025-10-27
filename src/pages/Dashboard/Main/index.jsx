@@ -19,17 +19,17 @@ export default function DashMain() {
           title="Profit"
           value={(
             <div className="flex items-center gap-3">
-              <TonIcon/><span>11,087</span>
+             <span className="text-gold-400"><TonIcon/></span><span>11,087</span>
             </div>
           )}
           sub="$25,278"
           rightNote="+4.64 TON"
-          gradient="from-[#2a3d6d] to-[#18263f]"
+        gradient="from-gold-500/25 to-gold-800/30"
         />
         <StatCard
           title="Partners"
           value="1712"
-          gradient="from-[#3aa0ff] to-[#2f62ff]"
+          gradient="from-gold-400 to-gold-700"
         />
       </div>
 
@@ -38,15 +38,15 @@ export default function DashMain() {
           title="Total team"
           value="60858"
           rightNote="+153"
-          gradient="from-[#2a3d6d] to-[#18263f]"
+           gradient="from-gold-500/25 to-gold-800/30"
         />
         <div className="rounded-2xl p-5 text-white border border-dashed border-white/20 bg-black/20">
           <div className="text-sm/5 text-white/70">Passive income</div>
           <div className="mt-3 flex items-end gap-3">
             <div className="flex items-center gap-2 text-3xl font-semibold tabular-nums">
-              <TonIcon/><span>432.357</span>
+           <span className="text-gold-400"><TonIcon/></span><span>432.357</span>
             </div>
-            <div className="text-white/60">~$986</div>
+           <div className="text-gold-200">~$986</div>
           </div>
         </div>
       </div>
@@ -58,9 +58,9 @@ export default function DashMain() {
       {/* Passive income header */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
         <SectionTitle>Passive income</SectionTitle>
-        <div className="text-right">
-          <div className="text-lg font-semibold">432.357 TON <span className="text-white/60 text-base">~$986</span></div>
-        </div>
+       <div className="text-lg font-semibold">
+           432.357 TON <span className="text-gold-200 text-base">~$986</span>
+         </div>
       </div>
 
       {/* Passive income table (dotted glass) */}

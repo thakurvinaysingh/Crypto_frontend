@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { openPreview, closePreview, setQuery } from "../store/slices/uiSlice";
 import Modal from "../components/common/Modal";
 import Button from "../components/common/Button";
+import { FaSearch } from "react-icons/fa";
+
 
 
 import useWalletModal from "../hooks/useWalletModal";
@@ -36,10 +38,10 @@ useEffect(() => {
   return (
     <section className="relative">
       {/* Hero */}
-      <div className="mx-auto max-w-4xl pt-0 sm:pt-6 md:pt-0">
+      <div className="mx-auto max-w-4xl pt-0 sm:pt-0 md:pt-0">
         <img
           src={Logo}
-          alt="Forton"
+          alt="Gain USDT"
           className="mx-auto w-[85%] max-w-[920px] md:w-[78%] lg:w-[72%] select-none pointer-events-none"
           draggable="false"
         />
@@ -49,7 +51,9 @@ useEffect(() => {
       <div className="mt-0 sm:mt-8 md:mt-0">
         <h1 className="text-center leading-tight font-semibold text-[28px] sm:text-[34px] md:text-[34px]">
           <span className="block">Earn with friends</span>
-          <span className="block mt-1.5">here and now.</span>
+        <span className="block mt-1.5 bg-gradient-to-r from-gold-400 to-gold-700 bg-clip-text text-transparent">
+            here and now.
+          </span>
         </h1>
 
         <div className="mt-8 sm:mt-10 flex items-center justify-center gap-4">
@@ -59,11 +63,15 @@ useEffect(() => {
           <button
             aria-label="Open preview"
             onClick={() => dispatch(openPreview())}
-            className="btn-circle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+             className="
+              btn-circle
+              bg-gold-700/15 
+            
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400/60
+           "
+           
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M11 19a8 8 0 1 1 5.293-2.707L21 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
+          <FaSearch className="h-6 w-6 hover:bg-gold-500/25"/>
           </button>
         </div>
 
@@ -99,72 +107,3 @@ useEffect(() => {
 
 
 
-
-// import Logo from '../assets/logo1.png'
-// import { useDispatch, useSelector } from 'react-redux'
-// import { openPreview, closePreview, setQuery } from '../store/slices/uiSlice'
-// import Modal from '../components/common/Modal'
-// import Button from '../components/common/Button'
-// import { useNavigate } from 'react-router-dom'
-
-// export default function Landing(){
-//   const { previewOpen, query } = useSelector(s=>s.ui)
-//   const dispatch = useDispatch()
-//   const nav = useNavigate()
-
-//   const openDashboard = () => { if (query.trim() === '1') nav('/main') }
-//   const onKeyDown = (e) => { if (e.key === 'Enter') openDashboard() }
-
-//   return (
-//     <section className="relative">
-//       {/* Hero logo — large on desktop, balanced on mobile */}
-//       <div className="mx-auto max-w-4xl pt-0 sm:pt-6 md:pt-0">
-//         <img
-//           src={Logo}
-//           alt="Forton"
-//           className="mx-auto w-[85%] max-w-[920px] md:w-[78%] lg:w-[72%] select-none pointer-events-none"
-//           draggable="false"
-//         />
-//       </div>
-
-//       {/* Headline + actions */}
-//       <div className="mt-0 sm:mt-8 md:mt-0">
-//         <h1 className="text-center leading-tight font-semibold text-[12px] sm:text-[34px] md:text-[34px] lg:text-[34px]">
-//           <span className="block">Earn with friends</span>
-//           <span className="block mt-2">here and now.</span>
-//         </h1>
-
-//         <div className="mt-8 sm:mt-10 flex items-center justify-center gap-4">
-//           <Button>Connect Wallet</Button>
-//           <button
-//             aria-label="Open preview"
-//             onClick={()=>dispatch(openPreview())}
-//             className="btn-circle"
-//           >
-//             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-//               <path d="M11 19a8 8 0 1 1 5.293-2.707L21 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-//             </svg>
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* Preview modal */}
-//       <Modal open={previewOpen} onClose={()=>dispatch(closePreview())}>
-//         <h3 className="text-2xl font-semibold mb-1">Preview mode</h3>
-//         <p className="text-white/70 mb-4">Enter user ID to preview their data</p>
-//         <input
-//           autoFocus
-//           value={query}
-//           onChange={(e)=>dispatch(setQuery(e.target.value))}
-//           onKeyDown={onKeyDown}
-//           placeholder="Enter user ID"
-//           className="input mb-4"
-//         />
-//         <Button className="w-full" onClick={openDashboard}>Open dashboard</Button>
-//       </Modal>
-
-//       {/* Extra vertical space for safe-area on phones */}
-//       <div className="h-safe" />
-//     </section>
-//   )
-// }

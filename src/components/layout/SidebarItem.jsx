@@ -10,20 +10,20 @@ export default function Sidebar() {
       className="
         hidden md:flex flex-col justify-between
         w-[13.5rem] h-full p-6 rounded-[34px]
-        bg-[#5BB8FF]
-        [background:linear-gradient(180deg,#5bb8ff_0%,#4ea7ee_50%,#3b91da_100%)]
+        bg-[#FFD700]
+       [background:linear-gradient(180deg,#FFD700_0%,#E6BE8A_45%,#B8860B_100%)]
         shadow-[0_8px_30px_rgba(0,0,0,0.25)]
         transition-all duration-300
       "
     >
       {/* search */}
       <div>
-        <div className="flex items-center justify-between bg-[#3D89D0]/40 rounded-2xl px-3 py-2 shadow-inner">
+        <div className="flex items-center justify-between bg-[#C9A227]/35 rounded-2xl px-3 py-2 shadow-inner">
           <input
             defaultValue="1"
             className="bg-transparent w-full outline-none placeholder-white/70 text-sm text-white"
           />
-          <button className="h-8 w-8 rounded-full bg-[#3D89D0]/60 flex items-center justify-center shadow-md">
+           <button className="h-8 w-8 rounded-full bg-[#B8860B]/60 flex items-center justify-center shadow-md">
             <FiSearch className="text-white" size={16} />
           </button>
         </div>

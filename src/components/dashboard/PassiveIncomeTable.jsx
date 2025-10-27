@@ -13,13 +13,13 @@ export default function PassiveIncomeTable() {
     <div className="glass p-4 sm:p-5">
       <div className="flex items-center justify-between mb-3">
         <div className="text-white/70 text-sm">Period</div>
-        <div className="inline-flex items-center gap-3 rounded-xl bg-black/30 px-3 py-2 border border-white/10 text-sm">
+       <div className="inline-flex items-center gap-3 rounded-xl bg-black/30 px-3 py-2 border border-gold-600/20 text-sm">
           <span className="text-white/80">10.10 – 20.10</span>
-          <span className="inline-flex h-6 w-6 rounded-md bg-white/10 items-center justify-center">📅</span>
+            <span className="inline-flex h-6 w-6 rounded-md bg-gold-700/25 items-center justify-center">📅</span>
         </div>
       </div>
 
-      <DottedCard className="bg-gradient-to-br from-[#283b5d]/40 to-[#1a2233]/40">
+   <DottedCard className="bg-gradient-to-br from-gold-700/15 to-gold-900/20">
         <div className="divide-y divide-white/10">
           {rows.map((r, idx) => (
             <div key={idx} className="flex items-center py-3 sm:py-3.5">
@@ -28,8 +28,8 @@ export default function PassiveIncomeTable() {
               </div>
               <div className="flex-1 text-white/90">{r.label}</div>
               <div className="min-w-[100px] text-right flex items-center justify-end gap-2">
-                {r.value && <span className={r.value.includes('-') ? 'text-red-300' : 'text-white/90'}>{r.value}</span>}
-                <TonIcon className="h-4 w-4 opacity-90" />
+                  {r.value && <span className={r.value.includes('-') ? 'text-red-300' : 'text-gold-200'}>{r.value}</span>}
+                <TonIcon className="h-4 w-4 opacity-90 text-gold-400" />
               </div>
             </div>
           ))}

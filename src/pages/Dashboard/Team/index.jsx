@@ -30,10 +30,10 @@ export default function Team() {
       <section className="px-1 sm:px-0">
         <div className="flex items-center gap-2">
           <div className="inline-flex p-1 rounded-full bg-white/10 border border-white/10 backdrop-blur">
-            <button className="px-3 py-1.5 text-sm sm:text-base rounded-full bg-[#2f5cc0] text-white shadow-inner">
+            <button className="px-3 py-1.5 text-sm sm:text-base rounded-full bg-gradient-to-r from-gold-500 to-gold-700 text-white shadow-inner focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400/60">
               Squads
             </button>
-            <button className="px-3 py-1.5 text-sm sm:text-base rounded-full text-white/70 hover:text-white">
+               <button className="px-3 py-1.5 text-sm sm:text-base rounded-full text-white/70 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400/40">
               Partners
             </button>
           </div>
@@ -51,14 +51,14 @@ export default function Team() {
       <section
         className="
           rounded-3xl p-4 sm:p-6
-          bg-gradient-to-r from-[#1a263a] via-[#172132] to-[#121a28]
+          bg-gradient-to-r from-[#14181e] via-[#10151a] to-[#0b1016]
           border border-white/10 shadow-[0_8px_28px_rgba(0,0,0,0.35)]
           text-white
         "
       >
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 grid place-items-center shadow">
+               <div className="h-10 w-10 rounded-full bg-gradient-to-br from-gold-400 to-gold-700 grid place-items-center shadow">
               <span className="text-sm font-bold">F</span>
             </div>
             <div className="leading-tight min-w-0">
@@ -88,7 +88,7 @@ export default function Team() {
         <div
           className="
             mt-4 rounded-2xl px-4 py-3
-            bg-gradient-to-r from-[#ffcc4d] to-[#ffae33]
+            bg-gradient-to-r from-gold-300 to-gold-500
             text-zinc-900 font-semibold
             border border-black/10 shadow-inner
             flex items-center justify-between
@@ -118,7 +118,7 @@ export default function Team() {
       <section
         className="
           rounded-3xl overflow-hidden
-          bg-gradient-to-b from-[#1b2434] to-[#131a27]
+           bg-gradient-to-b from-[#161b1f] to-[#0f1418]
           border border-white/10 text-white
         "
       >
@@ -132,7 +132,7 @@ export default function Team() {
         <div className="px-2 sm:px-4">
           <div
             className="
-              rounded-2xl bg-gradient-to-r from-[#203558] to-[#1a2a44]
+              rounded-2xl bg-gradient-to-r from-gold-700/20 to-gold-900/25
               border border-white/10 shadow-inner
               px-3 sm:px-4 py-3 sm:py-4 mb-2
             "
@@ -142,7 +142,7 @@ export default function Team() {
               <div className="relative h-10 w-10 rounded-full overflow-hidden ring-2 ring-white/10 shrink-0">
                 <img src={leader.avatar} alt="" className="h-full w-full object-cover" />
               </div>
-              <span className="inline-flex items-center px-3 h-8 rounded-2xl text-sm bg-[#2f5cc0] shadow-inner">
+             <span className="inline-flex items-center px-3 h-8 rounded-2xl text-sm bg-gradient-to-r from-gold-500 to-gold-700 shadow-inner">
                 {leader.id}
               </span>
             </div>
@@ -170,14 +170,14 @@ export default function Team() {
                   )}
                 </div>
 
-                <span className="inline-flex items-center px-3 h-8 rounded-2xl text-sm bg-[#2f5cc0] shadow-inner">
+                <span className="inline-flex items-center px-3 h-8 rounded-2xl text-sm bg-gradient-to-r from-gold-500 to-gold-700 shadow-inner">
                   {m.id}
                 </span>
               </div>
 
               <div className="flex items-center gap-2 text-white/90">
                 <span className="text-sm sm:text-base">{m.profit}</span>
-                <span className="text-[#77bfff]">
+                <span className="text-gold-400">
                   <Diamond className="h-4 w-4" />
                 </span>
               </div>
@@ -197,24 +197,3 @@ export default function Team() {
   );
 }
 
-
-// export default function Team(){
-//   return (
-//     <div className="space-y-4">
-//       <div className="card p-6">
-//         <h2 className="text-3xl font-semibold mb-6">Squad</h2>
-//         <div className="divide-y divide-white/5">
-//           {[1,2,3,4,5,6].map((n)=> (
-//             <div key={n} className="flex items-center justify-between py-3">
-//               <div className="flex items-center gap-3">
-//                 <div className="h-10 w-10 rounded-full bg-white/10" />
-//                 <div className="opacity-80">ID {n}</div>
-//               </div>
-//               <div className="opacity-80">{(Math.random()*7).toFixed(1)}k ◇</div>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }

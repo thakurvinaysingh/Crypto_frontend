@@ -10,7 +10,7 @@ export default function ProgressStrip() {
         <div className="font-medium">963,848 TON</div>
       </div>
       <div className="h-[3px] rounded bg-white/10 overflow-hidden">
-        <div className="h-full w-[42%] bg-gradient-to-r from-blue-500 to-emerald-400" />
+       <div className="h-full w-[42%] bg-gradient-to-r from-gold-400 to-gold-700" />
       </div>
     </div>
   )

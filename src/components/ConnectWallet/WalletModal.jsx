@@ -42,7 +42,7 @@ export default function WalletModal({ isOpen, onClose, autoScanOnOpen = true }) 
 
   const handlePick = async (id) => {
     if (["metamask", "binance", "trust", "okx", "safepal"].includes(id)) {
-      await connectInjected();
+      await connectInjected(id);
       return;
     }
     if (id === "walletconnect") {
