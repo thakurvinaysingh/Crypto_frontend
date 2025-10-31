@@ -45,32 +45,103 @@ const isPkgAllowed = ALLOWED_PACKAGES.includes(Number(pkg));
     return () => { ignore = true; };
   }, [connected, address, nav]);
 
-  async function handleSendAndRegister() {
+  // async function handleSendAndRegister() {
     
+  //   try {
+  //     setErr("");
+  //     if (!connected) return openConnectModal();
+  //     if (!ALLOWED_PACKAGES.includes(Number(pkg))) throw new Error("Select a valid package amount.");
+  //     if (!isValidRefId(refId)) throw new Error("Invalid ref ID format.");
+  //     if (!RECEIVER) throw new Error("Receiver address not configured.");
+
+  //     setSuccess("");
+  //     // Ensure BSC
+  //     await ensureBscChain?.();
+
+  //     setProcessing(true);
+
+  //     // 1) Send USDT from user -> receiver
+  //     const walletClient = getWalletClient(provider);
+  //     const { hash } = await sendUsdt({
+  //       walletClient,
+  //       account: address,
+  //       to: RECEIVER,
+  //       amount: Number(pkg),
+  //     });
+
+      
+  //     // 2) Immediately register with backend (backend verifies chain & confirms)
+  //     await registerUser({
+  //       publicAddress: address.toLowerCase(),
+  //       refBy: refId || null,
+  //       packageAmount: Number(pkg),
+  //       tx: hash,
+  //       receiver: RECEIVER,
+  //       timestamp: new Date().toISOString(),
+  //     });
+
+
+  //    setSuccess("Transaction confirmed & registration completed! 🎉");
+  //    setTimeout(() => nav("/dashboard", { replace: true }), 1500);
+
+  //   } catch (e) {
+  //     const msg = String(e?.message || e);
+  //     if (/user rejected|denied|rejected the request/i.test(msg)) {
+  //       setErr("Transaction cancelled by user.");
+  //     } else {
+  //       setErr(msg);
+  //     }
+  //   } finally {
+  //     setProcessing(false);
+  //   }
+  // }
+  async function handleSendAndRegister() {
+  try {
+    setErr("");
+    setSuccess("");
+
+    if (!connected) return openConnectModal();
+    if (!ALLOWED_PACKAGES.includes(Number(pkg))) throw new Error("Select a valid package amount.");
+    if (!isValidRefId(refId)) throw new Error("Invalid ref ID format.");
+    if (!RECEIVER) throw new Error("Receiver address not configured.");
+
+    // Ensure BSC
+    await ensureBscChain?.();
+
+    setProcessing(true);
+
+    // 1) Send USDT
+    const walletClient = getWalletClient(provider);
+    let hash; // <-- declare in outer scope so we can use it later
     try {
-      setErr("");
-      if (!connected) return openConnectModal();
-      if (!ALLOWED_PACKAGES.includes(Number(pkg))) throw new Error("Select a valid package amount.");
-      if (!isValidRefId(refId)) throw new Error("Invalid ref ID format.");
-      if (!RECEIVER) throw new Error("Receiver address not configured.");
-
-      setSuccess("");
-      // Ensure BSC
-      await ensureBscChain?.();
-
-      setProcessing(true);
-
-      // 1) Send USDT from user -> receiver
-      const walletClient = getWalletClient(provider);
-      const { hash } = await sendUsdt({
+      const res = await sendUsdt({
         walletClient,
         account: address,
         to: RECEIVER,
         amount: Number(pkg),
+        // waitForConfirm: false, // set true if you want mined confirmation
       });
+      hash = res.hash;
+    } catch (err) {
+      const msg = String(err?.message || err);
 
-      
-      // 2) Immediately register with backend (backend verifies chain & confirms)
+      if (/Insufficient USDT balance/i.test(msg)) {
+        throw new Error(msg); // already user-friendly from sendUsdt
+      }
+      if (/Wrong network/i.test(msg)) {
+        throw new Error(msg);
+      }
+      if (/reverted|token address|decimals|Unable to prepare/i.test(msg)) {
+        throw new Error("Transfer failed — verify network, token address, and amount.");
+      }
+      if (/user rejected|denied/i.test(msg)) {
+        throw new Error("Transaction cancelled by user.");
+      }
+      throw new Error("Transaction failed. Please try again.");
+    }
+
+    // 2) Register with backend
+    try {
       await registerUser({
         publicAddress: address.toLowerCase(),
         refBy: refId || null,
@@ -79,22 +150,41 @@ const isPkgAllowed = ALLOWED_PACKAGES.includes(Number(pkg));
         receiver: RECEIVER,
         timestamp: new Date().toISOString(),
       });
+    } catch (err) {
+      const msg = String(err?.message || err);
 
-
-     setSuccess("Transaction confirmed & registration completed! 🎉");
-     setTimeout(() => nav("/dashboard", { replace: true }), 1500);
-
-    } catch (e) {
-      const msg = String(e?.message || e);
-      if (/user rejected|denied|rejected the request/i.test(msg)) {
-        setErr("Transaction cancelled by user.");
-      } else {
-        setErr(msg);
+      // Handle slow/timeout-y backends: confirm existence and proceed
+      if (/timeout|timed out|server.*not responding|504|gateway/i.test(msg)) {
+        try {
+          const exists = await checkUserExists(address);
+          if (exists?.exists) {
+            setSuccess("Transaction sent & registration saved! (Slow server response)");
+            setTimeout(() => nav("/dashboard", { replace: true }), 1500);
+            return;
+          }
+        } catch (_) { /* ignore and fall through */ }
       }
-    } finally {
-      setProcessing(false);
+      // rethrow non-timeout or unconfirmed cases
+      throw new Error(msg);
     }
+
+    // Success (no timeout)
+    // Note: wording says "Transaction sent" unless you actually wait for confirmations
+    setSuccess("Transaction sent & registration completed! 🎉");
+    setTimeout(() => nav("/dashboard", { replace: true }), 1500);
+
+  } catch (e) {
+    const msg = String(e?.message || e);
+    if (/user rejected|denied|rejected the request/i.test(msg)) {
+      setErr("Transaction cancelled by user.");
+    } else {
+      setErr(msg);
+    }
+  } finally {
+    setProcessing(false);
   }
+}
+
 
   return (
      <div className="min-h-[calc(100vh-4rem)] w-full px-4 sm:px-6 lg:px-8 py-6">
