@@ -1,17 +1,22 @@
-
+// src/pages/dashboard/Team.jsx
 import { FiUsers, FiEye, FiTrash2, FiSettings } from "react-icons/fi";
 
-const Diamond = ({ className = "h-4 w-4" }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="none">
-    <path d="M7 4h10l4 5-9 11L3 9l4-5z" stroke="currentColor" strokeWidth="1.6" />
+// Inline USDT icon to keep the same icon slot & spacing
+const UsdtIcon = ({ className = "h-4 w-4" }) => (
+  <svg viewBox="0 0 256 256" className={className} aria-hidden="true">
+    <circle cx="128" cy="128" r="128" fill="#26A17B" />
+    <path
+      fill="#FFF"
+      d="M208 82.7H148.5V66H107.5V82.7H48V108.3H107.5V124.4C73.8 126.4 49.8 133.7 49.8 142.3C49.8 151 73.8 158.3 107.5 160.3V201.3H148.5V160.2C182.1 158.2 206.2 150.9 206.2 142.2C206.2 133.6 182.1 126.3 148.5 124.3V108.3H208V82.7ZM148.5 146.6C146 146.8 136.9 147.4 128 147.4C119.1 147.4 110 146.8 107.5 146.6C77.7 144.6 55.2 139.4 55.2 133.5C55.2 127.6 77.7 122.4 107.5 120.4C110 120.2 119.1 119.6 128 119.6C136.9 119.6 146 120.2 148.5 120.4C178.3 122.4 200.8 127.6 200.8 133.5C200.8 139.4 178.3 144.6 148.5 146.6Z"
+    />
   </svg>
 );
 
 export default function Team() {
   const leader = {
     id: "ID 1",
-    avatar:
-      "https://c.forsage.io/forton-prod/user_photo/f8cf5062-e118-40b3-8100-c57de8326390.jpeg",
+    // Removed external forsage CDN. Empty string = existing neutral fallback block (no UI change)
+    avatar: "",
   };
 
   const squadMembers = [
@@ -33,7 +38,7 @@ export default function Team() {
             <button className="px-3 py-1.5 text-sm sm:text-base rounded-full bg-gradient-to-r from-gold-500 to-gold-700 text-white shadow-inner focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400/60">
               Squads
             </button>
-               <button className="px-3 py-1.5 text-sm sm:text-base rounded-full text-white/70 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400/40">
+            <button className="px-3 py-1.5 text-sm sm:text-base rounded-full text-white/70 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400/40">
               Partners
             </button>
           </div>
@@ -58,11 +63,11 @@ export default function Team() {
       >
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-               <div className="h-10 w-10 rounded-full bg-gradient-to-br from-gold-400 to-gold-700 grid place-items-center shadow">
-              <span className="text-sm font-bold">F</span>
+            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-gold-400 to-gold-700 grid place-items-center shadow">
+              <span className="text-sm font-bold">G</span>
             </div>
             <div className="leading-tight min-w-0">
-              <div className="font-semibold truncate">FORSAGE.io official channel</div>
+              <div className="font-semibold truncate">Gain USDT official channel</div>
               <div className="text-xs text-white/70">47,766 subscribers</div>
             </div>
           </div>
@@ -118,7 +123,7 @@ export default function Team() {
       <section
         className="
           rounded-3xl overflow-hidden
-           bg-gradient-to-b from-[#161b1f] to-[#0f1418]
+          bg-gradient-to-b from-[#161b1f] to-[#0f1418]
           border border-white/10 text-white
         "
       >
@@ -128,7 +133,7 @@ export default function Team() {
           <span className="opacity-60">Total profit</span>
         </div>
 
-        {/* crowned leader strip (rounded top inner, blue) */}
+        {/* crowned leader strip */}
         <div className="px-2 sm:px-4">
           <div
             className="
@@ -140,16 +145,20 @@ export default function Team() {
             <div className="flex items-center gap-3 sm:gap-4">
               <span className="text-[18px]">👑</span>
               <div className="relative h-10 w-10 rounded-full overflow-hidden ring-2 ring-white/10 shrink-0">
-                <img src={leader.avatar} alt="" className="h-full w-full object-cover" />
+                {leader.avatar ? (
+                  <img src={leader.avatar} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  <div className="h-full w-full bg-white/10" />
+                )}
               </div>
-             <span className="inline-flex items-center px-3 h-8 rounded-2xl text-sm bg-gradient-to-r from-gold-500 to-gold-700 shadow-inner">
+              <span className="inline-flex items-center px-3 h-8 rounded-2xl text-sm bg-gradient-to-r from-gold-500 to-gold-700 shadow-inner">
                 {leader.id}
               </span>
             </div>
           </div>
         </div>
 
-        {/* ranked list with dashed separators (and #1 row highlighted) */}
+        {/* ranked list */}
         <div className="divide-y divide-white/10">
           {squadMembers.map((m) => (
             <div
@@ -178,14 +187,14 @@ export default function Team() {
               <div className="flex items-center gap-2 text-white/90">
                 <span className="text-sm sm:text-base">{m.profit}</span>
                 <span className="text-gold-400">
-                  <Diamond className="h-4 w-4" />
+                  <UsdtIcon className="h-4 w-4" />
                 </span>
               </div>
             </div>
           ))}
         </div>
 
-        {/* dotted line overlay under the first row (exact like screenshot) */}
+        {/* dotted line under the first row */}
         <div className="px-3 sm:px-6">
           <div className="border-t border-dashed border-white/25" />
         </div>

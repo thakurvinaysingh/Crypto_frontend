@@ -1,3 +1,100 @@
+
+// src/lib/api.js
+const RAW_API = import.meta.env.VITE_API_BASE_URL || "";
+const API = RAW_API.replace(/\/+$/, ""); // sanitize trailing slash
+
+function withTimeout(ms) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), ms);
+  return { signal: ctrl.signal, clear: () => clearTimeout(timer) };
+}
+
+async function http(method, path, body, { timeoutMs = 25000, headers = {} } = {}) {
+  const { signal, clear } = withTimeout(timeoutMs);
+  try {
+    const res = await fetch(`${API}${path}`, {
+      method,
+      headers: { "Content-Type": "application/json", ...headers },
+      body: body ? JSON.stringify(body) : undefined,
+      signal,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      // Bubble up backend error message if present
+      throw new Error(data?.error || data?.message || `HTTP ${res.status}`);
+    }
+    return data;
+  } catch (err) {
+    // Surface AbortError as a clear timeout
+    if (err?.name === "AbortError") {
+      throw new Error("Request timed out. The server took too long to respond.");
+    }
+    throw err;
+  } finally {
+    clear();
+  }
+}
+
+export async function checkUserExists(address) {
+  const res = await http(
+    "POST",
+    `/api/Auth/user`,
+    { publicAddress: address.toLowerCase() },
+    {
+      headers: { "x-api-key": "hjbdguydfjri7473ryuyutyhte5ghgrtt6r" },
+      timeoutMs: 15000,
+    }
+  );
+  return res; // expected { exists: true/false, ... }
+}
+
+/**
+ * Register user with robust timeout handling.
+ * If the request times out or returns a "timeout/504" style error,
+ * we re-check existence and treat that as success if found.
+ */
+export async function registerUser(payload, { timeoutMs = 25000 } = {}) {
+  try {
+    return await http("POST", `/api/Auth/Register`, payload, { timeoutMs });
+  } catch (err) {
+    const msg = String(err?.message || err);
+    const looksLikeTimeout =
+      /timeout|timed out|server is not responding|504|gateway/i.test(msg);
+
+    if (looksLikeTimeout && payload?.publicAddress) {
+      // backend may have saved before timing out—confirm via existence
+      try {
+        const exists = await checkUserExists(payload.publicAddress);
+        if (exists?.exists) {
+          return { ok: true, via: "timeout-confirmed" };
+        }
+      } catch {
+        // ignore secondary failure; fall through to throw original error
+      }
+    }
+    throw err;
+  }
+}
+
+export async function getDistributionByRefId(refId) {
+  const res = await http(
+    "GET",
+    `/api/Auth/getByRefId?id=${refId}`,
+    null,
+    {
+      timeoutMs: 15000,
+      headers: {
+        "x-api-key": "hjbdguydfjri7473ryuyutyhte5ghgrtt6r", // if needed
+      },
+    }
+  );
+  return res?.data || [];
+}
+
+
+
+
+
 // // src/lib/api.js
 // const API_BASE = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
 
@@ -103,81 +200,3 @@
 //   // payload: { walletAddress, refId, packageAmount, txHash, receiverAddress, timestamp }
 //   return http("POST", `/api/Auth/Register`, payload);
 // }
-
-
-// src/lib/api.js
-const RAW_API = import.meta.env.VITE_API_BASE_URL || "";
-const API = RAW_API.replace(/\/+$/, ""); // sanitize trailing slash
-
-function withTimeout(ms) {
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), ms);
-  return { signal: ctrl.signal, clear: () => clearTimeout(timer) };
-}
-
-async function http(method, path, body, { timeoutMs = 25000, headers = {} } = {}) {
-  const { signal, clear } = withTimeout(timeoutMs);
-  try {
-    const res = await fetch(`${API}${path}`, {
-      method,
-      headers: { "Content-Type": "application/json", ...headers },
-      body: body ? JSON.stringify(body) : undefined,
-      signal,
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      // Bubble up backend error message if present
-      throw new Error(data?.error || data?.message || `HTTP ${res.status}`);
-    }
-    return data;
-  } catch (err) {
-    // Surface AbortError as a clear timeout
-    if (err?.name === "AbortError") {
-      throw new Error("Request timed out. The server took too long to respond.");
-    }
-    throw err;
-  } finally {
-    clear();
-  }
-}
-
-export async function checkUserExists(address) {
-  const res = await http(
-    "POST",
-    `/api/Auth/user`,
-    { publicAddress: address.toLowerCase() },
-    {
-      headers: { "x-api-key": "hjbdguydfjri7473ryuyutyhte5ghgrtt6r" },
-      timeoutMs: 15000,
-    }
-  );
-  return res; // expected { exists: true/false, ... }
-}
-
-/**
- * Register user with robust timeout handling.
- * If the request times out or returns a "timeout/504" style error,
- * we re-check existence and treat that as success if found.
- */
-export async function registerUser(payload, { timeoutMs = 25000 } = {}) {
-  try {
-    return await http("POST", `/api/Auth/Register`, payload, { timeoutMs });
-  } catch (err) {
-    const msg = String(err?.message || err);
-    const looksLikeTimeout =
-      /timeout|timed out|server is not responding|504|gateway/i.test(msg);
-
-    if (looksLikeTimeout && payload?.publicAddress) {
-      // backend may have saved before timing out—confirm via existence
-      try {
-        const exists = await checkUserExists(payload.publicAddress);
-        if (exists?.exists) {
-          return { ok: true, via: "timeout-confirmed" };
-        }
-      } catch {
-        // ignore secondary failure; fall through to throw original error
-      }
-    }
-    throw err;
-  }
-}

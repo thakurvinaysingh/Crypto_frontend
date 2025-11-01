@@ -1,5 +1,6 @@
 // src/components/layout/HeaderBar.jsx
-import Logo from "../../assets/logo1.png";
+import Logo from "../../assets/Gain-USDT-4.png";
+
 
 export default function HeaderBar() {
   return (
@@ -24,10 +25,10 @@ export default function HeaderBar() {
               <img
                 src={Logo}
                 alt="Forton"
-                className="h-16 w-20 select-none pointer-events-none"
+                className="h-auto w-[110px] gap-1 select-none pointer-events-none"
                 draggable="false"
               />
-              <span className="text-2xl font-mono tracking-wide">Gain USDT</span>
+              <span className="text-xl font-mono tracking-wide"></span>
             </div>
 
             {/* right: search + user */}
