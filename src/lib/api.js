@@ -81,17 +81,21 @@ export async function getDistributionByRefId(refId) {
     "GET",
     `/api/Auth/getByRefId?id=${refId}`,
     null,
-    {
-      timeoutMs: 15000,
-      headers: {
-        "x-api-key": "hjbdguydfjri7473ryuyutyhte5ghgrtt6r", // if needed
-      },
-    }
+ { timeoutMs: 15000 }
   );
   return res?.data || [];
 }
 
-
+ export async function getDashboardById(id) {
+   if (id == null || id === "") throw new Error("Missing id for dashboard.");
+   const res = await http(
+     "GET",
+     `/api/Auth/dashboardbyid?id=${id}`,
+     null,
+    { timeoutMs: 15000 }
+   );
+   return res?.data || {};
+ }
 
 
 

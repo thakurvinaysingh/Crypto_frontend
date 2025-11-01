@@ -6,6 +6,8 @@ import ProgressStrip from '../../../components/dashboard/ProgressStrip'
 import ProgramCard from '../../../components/dashboard/ProgramCard'
 import PassiveIncomeTable from '../../../components/dashboard/PassiveIncomeTable'
 import EarnCard from '../../../components/dashboard/EarnCard'
+import { useEffect, useState, useCallback } from 'react'
+import { getDashboardById } from '../../../lib/api'
 
 // Inline USDT icon (keeps UI spacing identical to TonIcon usage)
 function UsdtIcon(props) {
@@ -28,6 +30,42 @@ function UsdtIcon(props) {
 }
 
 export default function DashMain() {
+    const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [err, setErr] = useState('')
+
+  const recordId =
+    localStorage.getItem('fx_user_id') ??
+    localStorage.getItem('fx_user_userId')
+
+  const fetchData = useCallback(async () => {
+    setErr('')
+    setLoading(true)
+    try {
+      if (!recordId) {
+        throw new Error('No session found. Please connect / register.')
+      }
+      const res = await getDashboardById(recordId)
+      setData(res || {})
+    } catch (e) {
+      setErr(String(e?.message || e))
+    } finally {
+      setLoading(false)
+    }
+  }, [recordId])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
+
+  const fmt = (v) =>
+    Number.isFinite(Number(v)) ? Number(v).toLocaleString() : '—'
+
+  const profitUSDT = data?.profitUSDT ?? 0
+  const partners = data?.partners ?? 0
+  const totalteam = data?.totalteam ?? 0
+  const incomeUSDT = data?.incomeUSDT ?? 0
+
   return (
     <div className="space-y-7 md:space-y-8">
       {/* Progress strip */}
@@ -37,19 +75,17 @@ export default function DashMain() {
       <div className="grid gap-4 md:grid-cols-[1.6fr_.9fr]">
         <StatCard
           title="Profit"
-          value={(
+                 value={
             <div className="flex items-center gap-3">
               <span className="text-gold-400"><UsdtIcon /></span>
-              <span>11,087</span>
+              <span>{loading ? '—' : fmt(profitUSDT)}</span>
             </div>
-          )}
-          sub="$25,278"
-          rightNote="+4.64 USDT"
+          }
           gradient="from-gold-500/25 to-gold-800/30"
         />
         <StatCard
           title="Partners"
-          value="1712"
+           value={loading ? '—' : fmt(partners)}
           gradient="from-gold-400 to-gold-700"
         />
       </div>
@@ -57,8 +93,7 @@ export default function DashMain() {
       <div className="grid gap-4 md:grid-cols-2">
         <StatCard
           title="Total team"
-          value="60858"
-          rightNote="+153"
+         value={loading ? '—' : fmt(totalteam)}
           gradient="from-gold-500/25 to-gold-800/30"
         />
         <div className="rounded-2xl p-5 text-white border border-dashed border-white/20 bg-black/20">
@@ -66,9 +101,9 @@ export default function DashMain() {
           <div className="mt-3 flex items-end gap-3">
             <div className="flex items-center gap-2 text-3xl font-semibold tabular-nums">
               <span className="text-gold-400"><UsdtIcon /></span>
-              <span>432.357</span>
+              <span>{loading ? '—' : fmt(incomeUSDT)}</span>
             </div>
-            <div className="text-gold-200">~$986</div>
+            {/* <div className="text-gold-200">~$986</div> */}
           </div>
         </div>
       </div>
@@ -81,7 +116,8 @@ export default function DashMain() {
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
         <SectionTitle>Passive income</SectionTitle>
         <div className="text-lg font-semibold">
-          432.357 USDT <span className="text-gold-200 text-base">~$986</span>
+          {/* 432.357 USDT <span className="text-gold-200 text-base">~$986</span> */}
+          {loading ? '—' : fmt(incomeUSDT)} USDT
         </div>
       </div>
 

@@ -13,6 +13,39 @@ import { ALLOWED_PACKAGES } from "../lib/validators";
 // Gain USDT: allow empty or 3–32 chars (alnum, _ or -)
 const isValidRefId = (s) => !s || /^[a-zA-Z0-9_-]{3,32}$/.test(String(s));
 
+
+
+// -----------------------------
+// Local session helpers
+// -----------------------------
+const LS = {
+  id: "fx_user_id",          // stores data.id (record id)
+  userId: "fx_user_userId",  // stores data.userId (backend user id, can be 0)
+  wallet: "fx_wallet_addr",
+};
+
+// Extract both id & userId from common API shapes
+const extractIds = (obj) => {
+  const buckets = [obj, obj?.data, obj?.user, obj?.payload];
+  let id = null;
+  let userId = null;
+  for (const b of buckets) {
+    if (!b || typeof b !== "object") continue;
+    if (id === null && (typeof b.id === "number" || typeof b.id === "string")) id = b.id;
+    if (userId === null && (typeof b.userId === "number" || typeof b.userId === "string")) userId = b.userId;
+  }
+  return { id, userId };
+};
+
+const persistUser = (ids, wallet) => {
+  try {
+    // store even when value is 0 (so use != null, not truthy checks)
+    if (ids?.id != null) localStorage.setItem(LS.id, String(ids.id));
+    if (ids?.userId != null) localStorage.setItem(LS.userId, String(ids.userId));
+    if (wallet) localStorage.setItem(LS.wallet, wallet.toLowerCase());
+  } catch {}
+};
+
 // Receiver wallet configured via env for Gain USDT (BEP-20 USDT)
 const RECEIVER = import.meta.env.VITE_RECEIVER_ADDRESS;
 
@@ -38,8 +71,16 @@ export default function Onboard() {
       try {
         setChecking(true);
         const res = await checkUserExists(address);
+        // if (ignore) return;
+        // if (res?.exists) nav("/dashboard", { replace: true });
         if (ignore) return;
-        if (res?.exists) nav("/dashboard", { replace: true });
+          if (res?.exists) {
+          // Persist both ids  wallet, then redirect
+          const ids = extractIds(res);
+          persistUser(ids, address);
+          nav("/dashboard", { replace: true });
+          return;
+        }
       } catch (e) {
         setErr(e.message || "Failed to check user");
       } finally {
