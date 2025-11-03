@@ -35,17 +35,39 @@ async function http(method, path, body, { timeoutMs = 25000, headers = {} } = {}
   }
 }
 
-export async function checkUserExists(address) {
+// export async function checkUserExists(address) {
+//   const res = await http(
+//     "POST",
+//     `/api/Auth/user`,
+//     { publicAddress: address.toLowerCase() },
+//     {
+//       headers: { "x-api-key": "hjbdguydfjri7473ryuyutyhte5ghgrtt6r" },
+//       timeoutMs: 15000,
+//     }
+//   );
+//   return res; // expected { exists: true/false, ... }
+// }
+// src/lib/api.js
+
+export async function checkUserExists({ address, UserId }) {
+  const body = {};
+
+  if (address) body.publicAddress = address.toLowerCase();
+  if (UserId != null) body.UserId = String(UserId);
+
   const res = await http(
     "POST",
     `/api/Auth/user`,
-    { publicAddress: address.toLowerCase() },
+    body,
     {
-      headers: { "x-api-key": "hjbdguydfjri7473ryuyutyhte5ghgrtt6r" },
+      headers: {
+        "x-api-key": "hjbdguydfjri7473ryuyutyhte5ghgrtt6r",
+      },
       timeoutMs: 15000,
     }
   );
-  return res; // expected { exists: true/false, ... }
+
+  return res;   // expected { exists: true/false, id, userId, ... }
 }
 
 /**
