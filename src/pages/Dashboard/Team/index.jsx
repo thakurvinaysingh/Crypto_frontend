@@ -67,7 +67,7 @@ export default function Team() {
               <span className="text-sm font-bold">G</span>
             </div>
             <div className="leading-tight min-w-0">
-              <div className="font-semibold truncate">Gain USDT official channel</div>
+              <div className="font-semibold truncate">Connect USDT official channel</div>
               <div className="text-xs text-white/70">47,766 subscribers</div>
             </div>
           </div>

@@ -1,5 +1,5 @@
 // src/components/layout/HeaderBar.jsx
-import Logo from "../../assets/Gain-USDT-4.png";
+import Logo from "../../assets/Connect-USDT.png";
 
 
 export default function HeaderBar() {
@@ -115,7 +115,7 @@ export default function HeaderBar() {
                 <div className="flex items-center gap-3">
                   <div className="text-right leading-none">
                     <div className="text-[12px]">ID 43388</div>
-                    <div className="text-[12px] text-gold-200">get 6 TON</div>
+                    <div className="text-[12px] text-gold-200"> </div>
                   </div>
                   <button
                     aria-label="Search"
@@ -173,7 +173,7 @@ export default function HeaderBar() {
 //                 className="h-16 w-20 select-none pointer-events-none"
 //                 draggable="false"
 //               />
-//               <span className="text-2xl font-mono tracking-wide">Gain USDT</span>
+//               <span className="text-2xl font-mono tracking-wide">Connect USDT</span>
 //             </div>
 
 //             {/* right: search + user */}

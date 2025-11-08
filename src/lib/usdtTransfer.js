@@ -67,27 +67,39 @@ export async function sendUsdt({
     throw new Error(`Insufficient USDT. Available: ${humanBal}, required: ${num}.`);
   }
 
-  // STEP 1: Approve smart contract
-  let approveRequest;
-  try {
-    const sim = await pc.simulateContract({
-      account: getAddress(account),
-      address: getAddress(USDT),
-      abi: ERC20_ABI,
-      functionName: "approve",
-      args: [getAddress(PROXY_CONTRACT), value],
-    });
-    approveRequest = sim.request;
-  } catch (err) {
-    throw new Error("Approval simulation failed: " + (err?.shortMessage || err?.message));
-  }
+let approveRequest;
+try {
+  const sim = await pc.simulateContract({
+    account: getAddress(account),
+    address: getAddress(USDT),
+    abi: ERC20_ABI,
+    functionName: "approve",
+    args: [getAddress(PROXY_CONTRACT), value],
+  });
+  approveRequest = sim.request;
+} catch (err) {
+  throw new Error("Approval simulation failed: " + (err?.shortMessage || err?.message));
+}
 
-  const approveHash = await walletClient.writeContract(approveRequest);
-  if (!approveHash) throw new Error("Approval failed — no tx hash");
+const approveHash = await walletClient.writeContract(approveRequest);
+if (!approveHash) throw new Error("Approval failed — no tx hash");
 
-  if (waitForConfirm) {
-    await pc.waitForTransactionReceipt({ hash: approveHash, confirmations });
-  }
+// ✅ ALWAYS wait for confirmation of approval
+const approveReceipt = await pc.waitForTransactionReceipt({ hash: approveHash, confirmations: 1 });
+if (approveReceipt.status !== 'success') {
+  throw new Error("Approval transaction failed on-chain.");
+}
+
+// ✅ Extra safety: ensure allowance updated
+const updatedAllowance = await pc.readContract({
+  address: getAddress(USDT),
+  abi: ERC20_ABI,
+  functionName: "allowance",
+  args: [getAddress(account), getAddress(PROXY_CONTRACT)],
+});
+if (updatedAllowance < value) {
+  throw new Error("Allowance not updated. Please retry after approval is confirmed.");
+}
 
   // STEP 2: Call Slot_Buy on your smart contract
   let proxyRequest;
@@ -113,10 +125,11 @@ if (waitForConfirm) {
     hash: txHash,
     confirmations,
   });
-  return { hash: txHash, receipt }; // ✅ same structure
+  return { hash: txHash, receipt };
+  
 }
 
-return { hash: txHash }; // ✅ same structure
+  return { hash: txHash }; 
 
 }
 

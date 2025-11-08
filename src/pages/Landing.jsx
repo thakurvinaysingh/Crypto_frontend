@@ -103,7 +103,7 @@ export default function Landing() {
       <div className="mx-auto max-w-4xl">
         <img
           src={Logo}
-          alt="Gain USDT"
+          alt="Connect USDT"
           className="mx-auto w-[85%] max-w-[920px] md:w-[78%] lg:w-[42%] select-none pointer-events-none"
           draggable="false"
         />

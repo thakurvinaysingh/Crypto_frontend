@@ -114,7 +114,7 @@ export default function Onboard() {
         to: RECEIVER,
         amount: Number(pkg),
       });
-
+     
       await registerUser({
         publicAddress: address.toLowerCase(),
         refBy: refId.trim() || null,
