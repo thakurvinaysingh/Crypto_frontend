@@ -28,6 +28,7 @@ const navigate = useNavigate();
       localStorage.setItem("fx_user_id", trimmed);
       localStorage.setItem("fx_user_userId", "");
       localStorage.setItem("fx_wallet_addr", "");
+      localStorage.setItem("createdOn", "");
     } catch (err) {
       console.error("LocalStorage error:", err);
     }

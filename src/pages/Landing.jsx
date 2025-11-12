@@ -83,6 +83,12 @@ export default function Landing() {
       const res = await checkUserExists({ UserId: trimmedId });
 
       if (res?.exists) {
+        const createdOn = res?.data?.createdOn;
+        
+        if (createdOn) {
+          localStorage.setItem("createdOn", createdOn);
+          console.log("Created On saved:", createdOn);
+        } 
         persistUser(extractIds(res), address || null);
         nav("/dashboard", { replace: true });
       } else {

@@ -9,7 +9,9 @@ export default function useDisconnectAndHome() {
     try {
       localStorage.removeItem("fx_user_id");        // backend record id (data.id)
       localStorage.removeItem("fx_user_userId");    // backend user id (data.userId)
-      localStorage.removeItem("fx_wallet_addr");    // connected wallet
+      localStorage.removeItem("fx_wallet_addr");
+      localStorage.removeItem("createdOn");
+          // connected wallet
     } catch {
       // swallow
     }

@@ -14,13 +14,17 @@ const UsdtIcon = ({ className = "h-4 w-4 opacity-90 text-gold-400" }) => (
   </svg>
 );
 
+// Strict status check (avoids matching "Not Active")
+const isActive = (status) =>
+  String(status ?? "")
+    .trim()
+    .toLowerCase() === "active";
+
 /**
  * Props (all optional):
  * - id: number | string  (defaults to localStorage fx_user_id / fx_user_userId)
  * - startDate: 'YYYY-MM-DD'  (if omitted, defaults to current month start)
  * - endDate: 'YYYY-MM-DD'    (if omitted, defaults to today)
- * Note: if startDate & endDate are provided, the range is "controlled" and
- *       the calendar UI will be read-only (no changes applied).
  */
 export default function PassiveIncomeTable({ id, startDate, endDate }) {
   const [period, setPeriod] = useState("");
@@ -35,10 +39,7 @@ export default function PassiveIncomeTable({ id, startDate, endDate }) {
   const defaultStart = fmtISO(monthStart);
   const defaultEnd = fmtISO(today);
 
-  // Controlled if both provided
   const isControlled = Boolean(startDate && endDate);
-
-  // Internal range state (used when uncontrolled)
   const [start, setStart] = useState(startDate || defaultStart);
   const [end, setEnd] = useState(endDate || defaultEnd);
 
@@ -49,7 +50,6 @@ export default function PassiveIncomeTable({ id, startDate, endDate }) {
     }
   }, [isControlled, startDate, endDate]);
 
-  // Resolve id from props or localStorage
   const resolvedId = useMemo(
     () =>
       id ??
@@ -58,14 +58,10 @@ export default function PassiveIncomeTable({ id, startDate, endDate }) {
     [id]
   );
 
-  // Ensure start <= end (auto-fix)
   useEffect(() => {
-    if (start && end && start > end) {
-      setEnd(start);
-    }
+    if (start && end && start > end) setEnd(start);
   }, [start, end]);
 
-  // Fetch data on range/id change
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -81,27 +77,30 @@ export default function PassiveIncomeTable({ id, startDate, endDate }) {
           startDate: start,
           endDate: end,
         });
-
         if (!mounted) return;
 
         const apiRows = [
           {
-            ok: /active/i.test(String(data?.top10Status || "")),
+            ok: isActive(data?.top10Status),
+            statusText: data?.top10Status ?? "Not Active",
             label: "Owner Top 10 Squad",
             value: data?.top10Amount ?? 0,
           },
           {
-            ok: /active/i.test(String(data?.top100Status || "")),
+            ok: isActive(data?.top100Status),
+            statusText: data?.top100Status ?? "Not Active",
             label: "Top 100 Member",
             value: data?.top100Amount ?? 0,
           },
           {
-            ok: /active/i.test(String(data?.level2to5Status || "")),
+            ok: isActive(data?.level2to5Status),
+            statusText: data?.level2to5Status ?? "Not Active",
             label: "2–5 level Active",
             value: data?.level2to5Income ?? 0,
           },
           {
-            ok: /active/i.test(String(data?.level6to12Status || "")),
+            ok: isActive(data?.level6to12Status),
+            statusText: data?.level6to12Status ?? "Not Active",
             label: "6–12 level Unconditional",
             value: data?.level6to12Income ?? 0,
           },
@@ -116,7 +115,6 @@ export default function PassiveIncomeTable({ id, startDate, endDate }) {
         if (mounted) setLoading(false);
       }
     })();
-
     return () => {
       mounted = false;
     };
@@ -127,12 +125,10 @@ export default function PassiveIncomeTable({ id, startDate, endDate }) {
       ? new Intl.NumberFormat(undefined, { maximumFractionDigits: 6 }).format(Number(v))
       : String(v ?? "0");
 
-  // ---------------- Calendar Popover (no libs) ----------------
+  // Calendar popover (same as before)
   const [openCal, setOpenCal] = useState(false);
   const popRef = useRef(null);
   const btnRef = useRef(null);
-
-  // Temp range while the popover is open
   const [tmpStart, setTmpStart] = useState(start);
   const [tmpEnd, setTmpEnd] = useState(end);
 
@@ -143,7 +139,6 @@ export default function PassiveIncomeTable({ id, startDate, endDate }) {
     }
   }, [openCal, start, end]);
 
-  // Close on outside click / ESC
   useEffect(() => {
     if (!openCal) return;
     const onDown = (e) => {
@@ -167,7 +162,6 @@ export default function PassiveIncomeTable({ id, startDate, endDate }) {
     };
   }, [openCal]);
 
-  // Quick presets
   const applyPreset = (type) => {
     const d = new Date();
     const toISO = (x) => x.toISOString().slice(0, 10);
@@ -191,28 +185,23 @@ export default function PassiveIncomeTable({ id, startDate, endDate }) {
 
   const applyRange = () => {
     if (isControlled) {
-      // In controlled mode, just close popover (no changes)
       setOpenCal(false);
       return;
     }
-    // Ensure order
     let s = tmpStart;
     let e = tmpEnd;
     if (s && e && s > e) e = s;
-
     setStart(s || defaultStart);
     setEnd(e || defaultEnd);
     setOpenCal(false);
   };
 
-  // ---------------- Render ----------------
   return (
     <div className="glass p-4 sm:p-5 relative">
-      {/* Header line with trigger */}
+      {/* Header with trigger */}
       <div className="flex items-center justify-between mb-3">
         <div className="text-white/70 text-sm">Period</div>
 
-        {/* Period pill acts as calendar trigger */}
         <button
           ref={btnRef}
           type="button"
@@ -245,7 +234,6 @@ export default function PassiveIncomeTable({ id, startDate, endDate }) {
         >
           <div className="text-white/80 text-sm mb-3">Select range</div>
 
-          {/* Inputs row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <label className="inline-flex items-center gap-2 text-xs text-white/70">
               <span className="shrink-0">Start</span>
@@ -265,7 +253,7 @@ export default function PassiveIncomeTable({ id, startDate, endDate }) {
                 type="date"
                 value={tmpEnd}
                 min={tmpStart || undefined}
-                max={defaultEnd} // no future dates
+                max={defaultEnd}
                 disabled={isControlled}
                 onChange={(e) => setTmpEnd(e.target.value)}
                 className="px-3 py-2 rounded-xl bg-black/30 border border-gold-600/20 text-white text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/40 disabled:opacity-60"
@@ -273,7 +261,6 @@ export default function PassiveIncomeTable({ id, startDate, endDate }) {
             </label>
           </div>
 
-          {/* Quick presets */}
           <div className="mt-3 flex flex-wrap gap-2">
             <button
               type="button"
@@ -301,7 +288,6 @@ export default function PassiveIncomeTable({ id, startDate, endDate }) {
             </button>
           </div>
 
-          {/* Actions */}
           <div className="mt-4 flex items-center justify-end gap-2">
             <button
               type="button"
@@ -339,17 +325,29 @@ export default function PassiveIncomeTable({ id, startDate, endDate }) {
               <div key={idx} className="flex items-center py-3 sm:py-3.5">
                 <div className="w-6">
                   {r.ok ? (
-                    <span className="text-emerald-400 text-xl">✓</span>
+                    <span className="text-emerald-400 text-xl" aria-label="Active">✓</span>
                   ) : (
-                    <span className="text-red-400 text-xl">✕</span>
+                    <span className="text-red-400 text-xl" aria-label="Not Active">✕</span>
                   )}
                 </div>
+
                 <div className="flex-1 text-white/90">{r.label}</div>
-                <div className="min-w-[120px] text-right flex items-center justify-end gap-2">
+
+                {/* amount + status pill */}
+                <div className="min-w-[140px] text-right flex items-center justify-end gap-2">
                   <span className={(Number(r.value) ?? 0) < 0 ? "text-red-300" : "text-gold-200"}>
                     {displayAmount(r.value)}
                   </span>
                   <UsdtIcon />
+                  <span
+                    className={`ml-1 px-2 py-0.5 rounded-full text-[10px] border ${
+                      r.ok
+                        ? "text-emerald-300 border-emerald-500/30 bg-emerald-500/10"
+                        : "text-red-300 border-red-500/30 bg-red-500/10"
+                    }`}
+                  >
+                    {r.ok ? "Active" : "Not Active"}
+                  </span>
                 </div>
               </div>
             ))}

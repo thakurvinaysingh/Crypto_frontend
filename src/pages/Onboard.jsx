@@ -78,6 +78,12 @@ export default function Onboard() {
       try {
         setChecking(true);
         const res = await checkUserExists({ address });
+        const createdOn = res?.data?.createdOn;
+        
+        if (createdOn) {
+          localStorage.setItem("createdOn", createdOn);
+          console.log("Created On saved:", createdOn);
+        } 
         if (ignore) return;
         if (res?.exists) {
           persistUser(extractIds(res), address);
@@ -126,6 +132,11 @@ export default function Onboard() {
 
       const res = await checkUserExists({ address });
       if (res?.exists) {
+         const createdOn = res?.data?.createdOn;
+        if (createdOn) {
+          localStorage.setItem("createdOn", createdOn);
+          console.log("Created On saved:", createdOn);
+        } 
         persistUser(extractIds(res), address);
         setSuccess("Registration complete. Redirecting...");
         setTimeout(() => nav("/dashboard", { replace: true }), 1500);
