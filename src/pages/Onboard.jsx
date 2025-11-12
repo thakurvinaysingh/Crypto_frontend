@@ -12,7 +12,7 @@ import { ALLOWED_PACKAGES } from "../lib/validators";
 
 // Constants
 const RECEIVER = import.meta.env.VITE_RECEIVER_ADDRESS;
-const REF_ID_REGEX = /^[a-zA-Z0-9_-]{3,32}$/;
+const REF_ID_REGEX = /^\d+$/;
 const LOCAL_STORAGE_KEYS = {
   id: "fx_user_id",
   userId: "fx_user_userId",

@@ -7,6 +7,7 @@ import Onboard from "../pages/Onboard";
 import DashMain from "../pages/Dashboard/Main";
 import Base from "../pages/Dashboard/Base";
 import Team from "../pages/Dashboard/Team";
+import Partners from "../pages/Dashboard/Team/Partners";
 import NotFound from "../pages/NotFound";
 
 const router = createBrowserRouter([
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
       { index: true, element: <DashMain /> },         // "/dashboard"
       { path: "base", element: <Base /> },            // "/dashboard/base"
       { path: "team", element: <Team /> },            // "/dashboard/team"
+      { path: "partners", element: <Partners /> },            // "/dashboard/team"
     ],
   },
 

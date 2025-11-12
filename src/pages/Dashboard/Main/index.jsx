@@ -74,7 +74,7 @@ export default function DashMain() {
       {/* KPI rows */}
       <div className="grid gap-4 md:grid-cols-[1.6fr_.9fr]">
         <StatCard
-          title="Profit"
+          title="Package"
                  value={
             <div className="flex items-center gap-3">
               <span className="text-gold-400"><UsdtIcon /></span>
@@ -110,7 +110,7 @@ export default function DashMain() {
 
       {/* Programs */}
       <SectionTitle>Programs</SectionTitle>
-      <ProgramCard />
+      {/* <ProgramCard /> */}
 
       {/* Passive income header */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">

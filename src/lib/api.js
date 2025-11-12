@@ -127,8 +127,32 @@ export async function waitForTxConfirmationOnNode(
 }
 
 
+// GET /api/Team/squad?id=77
+export async function getSquadData(id) {
+  if (!id) throw new Error("Squad ID is required.");
+  const { data } = await ax.get(`https://webapi.upbonline.com/api/Team/squad`, {
+    params: { id },
+  });
+  return data?.data || [];
+}
 
 
+export async function getPartnersData(id) {
+  if (!id) throw new Error("Partners ID is required.");
+  const { data } = await ax.get("https://webapi.upbonline.com/api/Team/partners", {
+    params: { id },
+  });
+  // API shape: { success, message, data: [] }
+  return Array.isArray(data?.data) ? data.data : [];
+}
+
+export async function getPassiveIncome({ id, startDate, endDate }) {
+  if (!id) throw new Error("Missing id for passive income.");
+  const { data } = await ax.get("https://webapi.upbonline.com/api/Team/PassiveIncome", {
+    params: { id, startDate, endDate },
+  });
+  return data?.data || null;
+}
 
 
 
