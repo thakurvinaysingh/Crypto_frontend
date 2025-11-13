@@ -1,4 +1,4 @@
-export const ALLOWED_PACKAGES = [1,25, 50, 100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600];
+export const ALLOWED_PACKAGES = [25, 50, 100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600];
 
 export function isValidTxHash(tx) {
   return /^0x([A-Fa-f0-9]{64})$/.test(String(tx || ""));
