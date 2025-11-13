@@ -20,7 +20,7 @@ export default function Team() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
 
-  const SQUAD_ID = 77;
+  const SQUAD_ID = localStorage.getItem("fx_user_id") || "";
 
   useEffect(() => {
     let mounted = true;
