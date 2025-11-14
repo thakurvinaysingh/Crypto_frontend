@@ -115,15 +115,6 @@ export default function DashMain() {
       <SectionTitle>Programs</SectionTitle>
       {/* <ProgramCard /> */}
 
-      {/* Passive income header */}
-      {/* <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
-        <SectionTitle>Passive income</SectionTitle>
-        <div className="text-lg font-semibold">
-    
-          {loading ? '—' : fmt(incomeUSDT)} USDT
-        </div>
-      </div> */}
-
       {/* Passive income table (dotted glass) */}
       <PassiveIncomeTable />
 

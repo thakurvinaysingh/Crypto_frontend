@@ -107,13 +107,13 @@ export default function Partners() {
           <div className="overflow-x-auto">
             <table className="min-w-full text-left text-sm sm:text-base">
               <thead className="bg-white/[0.04]">
-                <tr className="text-white/80">
+                <tr className="text-white/80 text-xs">
                   <th className="px-4 sm:px-6 py-3 font-medium">UserId</th>
                   <th className="px-4 sm:px-6 py-3 font-medium">Level</th>
                   <th className="px-4 sm:px-6 py-3 font-medium">
-                    <span className="inline-flex items-center gap-2">
+                    <span className="inline-flex items-center gap-0">
                       TotalAmount
-                      <UsdtIcon className="h-3.5 w-3.5 opacity-90" />
+                      {/* <UsdtIcon className="h-3.5 w-3.5 opacity-90" /> */}
                     </span>
                   </th>
                 </tr>
