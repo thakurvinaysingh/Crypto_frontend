@@ -7,7 +7,7 @@ import ProgramCard from '../../../components/dashboard/ProgramCard'
 import PassiveIncomeTable from '../../../components/dashboard/PassiveIncomeTable'
 import EarnCard from '../../../components/dashboard/EarnCard'
 import { useEffect, useState, useCallback } from 'react'
-import { getDashboardById } from '../../../lib/api'
+import { getDashboardById ,getPassiveIncome} from '../../../lib/api'
 
 // Inline USDT icon (keeps UI spacing identical to TonIcon usage)
 function UsdtIcon(props) {
@@ -33,6 +33,7 @@ export default function DashMain() {
     const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [err, setErr] = useState('')
+  const [passiveTotalIncome, setPassiveTotalIncome] = useState(null)
 
   const recordId =
     localStorage.getItem('fx_user_id') ??
@@ -61,10 +62,12 @@ export default function DashMain() {
   const fmt = (v) =>
     Number.isFinite(Number(v)) ? Number(v).toLocaleString() : '—'
 
-  const profitUSDT = data?.profitUSDT ?? 0
+  const investment = data?.investment ?? 0
   const partners = data?.partners ?? 0
   const totalteam = data?.totalteam ?? 0
+  const team = data?.team ?? 0
   const incomeUSDT = data?.incomeUSDT ?? 0
+  const income = data?.income ?? 0
 
   return (
     <div className="space-y-7 md:space-y-8">
@@ -78,7 +81,7 @@ export default function DashMain() {
                  value={
             <div className="flex items-center gap-3">
               <span className="text-gold-400"><UsdtIcon /></span>
-              <span>{loading ? '—' : fmt(profitUSDT)}</span>
+              <span>{loading ? '—' : fmt(investment)}</span>
             </div>
           }
           gradient="from-gold-500/25 to-gold-800/30"
@@ -93,7 +96,7 @@ export default function DashMain() {
       <div className="grid gap-4 md:grid-cols-2">
         <StatCard
           title="Total team"
-         value={loading ? '—' : fmt(totalteam)}
+         value={loading ? '—' : fmt(team)}
           gradient="from-gold-500/25 to-gold-800/30"
         />
         <div className="rounded-2xl p-5 text-white border border-dashed border-white/20 bg-black/20">
@@ -101,7 +104,7 @@ export default function DashMain() {
           <div className="mt-3 flex items-end gap-3">
             <div className="flex items-center gap-2 text-3xl font-semibold tabular-nums">
               <span className="text-gold-400"><UsdtIcon /></span>
-              <span>{loading ? '—' : fmt(incomeUSDT)}</span>
+              <span>{loading ? '—' : fmt(income)}</span>
             </div>
             {/* <div className="text-gold-200">~$986</div> */}
           </div>
@@ -113,13 +116,13 @@ export default function DashMain() {
       {/* <ProgramCard /> */}
 
       {/* Passive income header */}
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+      {/* <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
         <SectionTitle>Passive income</SectionTitle>
         <div className="text-lg font-semibold">
-          {/* 432.357 USDT <span className="text-gold-200 text-base">~$986</span> */}
+    
           {loading ? '—' : fmt(incomeUSDT)} USDT
         </div>
-      </div>
+      </div> */}
 
       {/* Passive income table (dotted glass) */}
       <PassiveIncomeTable />
