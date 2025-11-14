@@ -3,7 +3,8 @@ import { useState,useEffect } from "react";
 import { NavLink ,useNavigate} from "react-router-dom";
 import { FiSearch, FiGrid, FiUsers, FiX } from "react-icons/fi";
 import useDisconnectAndHome from "../../hooks/useDisconnectAndHome";
-
+import { checkUserExists } from "../../lib/api";
+import { extractIds } from "../../lib/helpers";
 export default function Sidebar() {
   const disconnectAndHome = useDisconnectAndHome();
 const navigate = useNavigate();
@@ -18,24 +19,38 @@ const navigate = useNavigate();
       console.error("Failed to load saved ID:", err);
     }
   }, []);
-  const handleSearch = (e) => {
-    e.preventDefault();
-    const trimmed = String(searchValue || "").trim();
-    if (!trimmed) return;
 
-    try {
-      // Save this ID and clear other local fields
-      localStorage.setItem("fx_user_id", trimmed);
-      localStorage.setItem("fx_user_userId", "");
+const handleSearch = async (e) => {
+  e.preventDefault();
+  const trimmed = String(searchValue || "").trim();
+  if (!trimmed) return;
+
+  try {
+    const res = await checkUserExists({ UserId: trimmed });
+
+    if (res?.exists) {
+      const { id, userId } = extractIds(res); // optional, reuse if needed
+      const createdOn = res?.data?.createdOn;
+    
+
+      // Set all necessary localStorage fields
+      if (id != null) localStorage.setItem("fx_user_id", String(id));
+      if (userId != null) localStorage.setItem("fx_user_userId", String(userId));
+      if (createdOn) localStorage.setItem("createdOn", createdOn);
       localStorage.setItem("fx_wallet_addr", "");
-      localStorage.setItem("createdOn", "");
-    } catch (err) {
-      console.error("LocalStorage error:", err);
-    }
 
-    // Navigate to dashboard so it re-fetches data for this ID
-    navigate("/dashboard");
-  };
+      // ✅ Refresh dashboard with new data
+      window.location.href = "/dashboard";
+    } else {
+      window.location.href = "/dashboard";
+    }
+  } catch (err) {
+    console.error("Failed to fetch user:", err);
+    alert("Something went wrong. Please try again.");
+  }
+};
+
+
 
   return (
     <aside
@@ -69,18 +84,6 @@ const navigate = useNavigate();
             <FiSearch className="text-white" size={16} />
           </button>
         </form>
-
-
-        {/* <div className="flex items-center justify-between bg-[#C9A227]/35 rounded-2xl px-3 py-2 shadow-inner">
-          <input
-            defaultValue="1"
-            className="bg-transparent w-full outline-none placeholder-white/70 text-sm text-white"
-          />
-           <button className="h-8 w-8 rounded-full bg-[#B8860B]/60 flex items-center justify-center shadow-md">
-            <FiSearch className="text-white" size={16} />
-          </button>
-        </div> */}
-
         {/* navigation */}
         <nav className="mt-10 flex flex-col gap-4 text-white/90 font-semibold">
           <NavLink
