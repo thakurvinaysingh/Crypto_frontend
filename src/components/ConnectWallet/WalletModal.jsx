@@ -46,7 +46,7 @@ export default function WalletModal({ isOpen, onClose, autoScanOnOpen = true }) 
       return;
     }
     if (id === "walletconnect") {
-      await connectWalletConnect(); // user chooses WC explicitly
+      await connectWalletConnect(); 
       return;
     }
   };
@@ -162,7 +162,7 @@ export default function WalletModal({ isOpen, onClose, autoScanOnOpen = true }) 
                 </>
               )}
 
-              {connected && (
+              {/* {connected && (
                 <div className="space-y-4">
                   <div className="rounded-2xl bg-white/5 border border-white/10 p-4">
                     <div className="text-sm text-white/60">Address</div>
@@ -175,7 +175,7 @@ export default function WalletModal({ isOpen, onClose, autoScanOnOpen = true }) 
                     </div>
                   </div>
                 </div>
-              )}
+              )} */}
             </div>
           </motion.div>
         </motion.div>

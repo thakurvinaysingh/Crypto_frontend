@@ -150,13 +150,13 @@ const copyId = async () => {
               <div className="text-right leading-tight">
                 <div className="flex items-center justify-end gap-2">
                   <div className="font-semibold text-lg font-mono">
-                    ID {userId || "—"} 
+                    Ref-ID {userId || "—"} 
                   </div>
                   <button
                     type="button"
                     onClick={copyId}
                     disabled={!userId}
-                    title={userId ? "Copy ID" : "No ID"}
+                    title={userId ? "Referrel-ID" : "Referrel-No ID"}
                     aria-label="Copy ID"
                     className={`
                       inline-flex items-center justify-center

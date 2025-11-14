@@ -67,9 +67,42 @@ export default function Landing() {
   const [previewError, setPreviewError] = useState("");
 
   // Auto-navigate to onboarding if connected
+ // -------------------------------------------
+  // UPDATED: Handle Auto-Login vs Onboarding
+  // -------------------------------------------
   useEffect(() => {
-    if (connected) nav("/onboard", { replace: true });
-  }, [connected, nav]);
+    // Only run if wallet is connected and we have an address
+    if (connected && address) {
+      const handleLogin = async () => {
+        try {
+          // Check DB for this specific Wallet Address
+          // Note: Ensure your API expects 'WalletId' or the equivalent key for address checks
+          const res = await checkUserExists({  address });
+
+          if (res?.exists) {
+            // CASE A: User exists in DB -> Save session & Go to Dashboard
+            const createdOn = res?.data?.createdOn;
+            if (createdOn) {
+              localStorage.setItem("createdOn", createdOn);
+            }
+            // Reuse your existing helper to save IDs and Wallet
+            persistUser(extractIds(res), address);
+            
+            nav("/dashboard", { replace: true });
+          } else {
+            // CASE B: No data found -> User is new -> Go to Onboarding
+            nav("/onboard", { replace: true });
+          }
+        } catch (err) {
+          console.error("User check failed", err);
+          // Fallback: If API fails, send to onboard so flow doesn't get stuck
+          nav("/", { replace: true });
+        }
+      };
+
+      handleLogin();
+    }
+  }, [connected, address, nav]);
 
   const openDashboard = async () => {
     const trimmedId = (query || "").trim();
