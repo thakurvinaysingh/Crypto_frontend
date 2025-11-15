@@ -1,3 +1,4 @@
+
 // src/components/ConnectWallet/EVMWalletProvider.jsx
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import EthereumProvider from "@walletconnect/ethereum-provider";
